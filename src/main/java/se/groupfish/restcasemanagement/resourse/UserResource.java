@@ -34,6 +34,7 @@ public final class UserResource {
 	@Autowired
 	private RestUserService service;
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private WorkItemService workItemService;
 
@@ -51,8 +52,8 @@ public final class UserResource {
 	}
 
 	@PUT
-	@Path("{updateUserName}")
-	public Response updateUser(@PathParam("updateUserName") Long id, DTOUser dtoUser) {
+	@Path("{id}")
+	public Response updateUser(@PathParam("id") Long id, DTOUser dtoUser) {
 
 			try {
 				service.updateUser(id, dtoUser.getUserName());
@@ -63,8 +64,8 @@ public final class UserResource {
 		return Response.status(Status.OK).build();
 	}
 	@PUT
-	@Path("{updateUserState}")
-	public Response disableUser(@PathParam("updateUserState") Long id, DTOUser dtoUser) {
+	@Path("{id}")
+	public Response disableUser(@PathParam("id") Long id, DTOUser dtoUser) {
 		try {
 			service.disableUser(id, dtoUser.getState());
 		} catch (Exception e) {
