@@ -12,40 +12,40 @@ import se.groupfish.springcasemanagement.service.UserService;
 @Component
 public class RestUserService {
 
-	private final UserService service;
+	private final UserService userService;
 
-	public RestUserService(UserService service) {
-		this.service = service;
+	public RestUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 	public User saveUser(DTOUser dtoUser) throws ServiceException {
 
 		User savedUser = toEntity(dtoUser);
-		return service.createUser(savedUser);
+		return userService.createUser(savedUser);
 	}
 
 	public void updateUser(Long userId, String userName) throws ServiceException {
 
-		User userForUpdate = service.getUserById(userId);
-		service.updateUserUsername(userForUpdate.getId(), userName);
+		User userForUpdate = userService.getUserById(userId);
+		userService.updateUserUsername(userForUpdate.getId(), userName);
 	}
 
 	public void disableUser(Long id, String state) throws ServiceException {
 
-		User userForDisactivate = service.getUserById(id);
-		service.updateUserState(userForDisactivate.getId(), state);
+		User userForDisactivate = userService.getUserById(id);
+		userService.updateUserState(userForDisactivate.getId(), state);
 	}
 
 	public DTOUser getUserByNumber(String number) throws ServiceException {
 
-		User getUser = service.findUserByNumber(number);
+		User getUser = userService.findUserByNumber(number);
 		DTOUser user = toDTO(getUser);
 		return user;
 	}
 
 	public DTOUser getUserByFirstName(String firstName) throws ServiceException {
 
-		User getUser = service.findUserByFirstName(firstName);
+		User getUser = userService.findUserByFirstName(firstName);
 		DTOUser user = toDTO(getUser);
 		return user;
 	}
