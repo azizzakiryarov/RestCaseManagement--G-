@@ -1,7 +1,11 @@
 Manifest-Version: 1.0
 Implementation-Title: RestCaseManagement
 Implementation-Version: 0.0.1-SNAPSHOT
+<<<<<<< HEAD
 Built-By: vladimirsantillana
+=======
+Built-By: emillindblom
+>>>>>>> 1ee1fda1ad8bc88810aa03090ff179004f73d723
 Implementation-Vendor-Id: se.groupfish
 Build-Jdk: 1.8.0_102
 Implementation-URL: http://projects.spring.io/spring-boot/RestCaseMana

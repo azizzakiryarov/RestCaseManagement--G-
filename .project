@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>RestCaseManagement--G-</name>
+=======
+<<<<<<< HEAD
+	<name>RestCaseManagement--G-</name>
+=======
+	<name>RestCaseManagement</name>
+>>>>>>> 52d2741f43ce40d9324fa806baf18f101c225a7f
+>>>>>>> 1ee1fda1ad8bc88810aa03090ff179004f73d723
 	<comment></comment>
 	<projects>
 	</projects>
