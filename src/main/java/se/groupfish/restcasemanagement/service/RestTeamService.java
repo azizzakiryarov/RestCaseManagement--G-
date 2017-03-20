@@ -2,6 +2,7 @@ package se.groupfish.restcasemanagement.service;
 
 import org.springframework.stereotype.Component;
 
+import se.groupfish.restcasemanagement.data.DTOTeam;
 import se.groupfish.springcasemanagement.service.TeamService;
 
 @Component
@@ -13,6 +14,11 @@ public class RestTeamService {
 		this.teamService = teamService;
 	}
 	
+//	public createTeam(DTOTeam dtoTeam){
+//		
+//		Team createdTeam = teamService
+//		
+//	}
 	
 	
 	

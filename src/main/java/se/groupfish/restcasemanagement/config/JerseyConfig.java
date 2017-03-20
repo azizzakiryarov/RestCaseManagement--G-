@@ -18,6 +18,7 @@ public class JerseyConfig extends ResourceConfig {
 //		register(BadRequestExceptionMapper.class);
 //		register(UnathorizedExceptionMapper.class);
 //		register(RequestFilter.class);
+		//HEJ HEJ
 	}
 
 }
