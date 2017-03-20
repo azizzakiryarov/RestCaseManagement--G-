@@ -1,6 +1,7 @@
 package se.groupfish.restcasemanagement.service;
 
 import static se.groupfish.restcasemanagement.data.DTOUser.toEntity;
+import static se.groupfish.restcasemanagement.data.DTOUser.toDTO;
 
 import org.springframework.stereotype.Component;
 import se.groupfish.restcasemanagement.data.DTOUser;
@@ -33,6 +34,20 @@ public class RestUserService {
 
 		User userForDisactivate = service.getUserById(id);
 		service.updateUserState(userForDisactivate.getId(), state);
+	}
+
+	public DTOUser getUserByNumber(String number) throws ServiceException {
+
+		User getUser = service.findUserByNumber(number);
+		DTOUser user = toDTO(getUser);
+		return user;
+	}
+
+	public DTOUser getUserByFirstName(String firstName) throws ServiceException {
+
+		User getUser = service.findUserByFirstName(firstName);
+		DTOUser user = toDTO(getUser);
+		return user;
 	}
 
 }

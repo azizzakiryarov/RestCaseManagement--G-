@@ -1,4 +1,5 @@
 package se.groupfish.restcasemanagement.data;
+
 import se.groupfish.springcasemanagement.model.User;
 
 public class DTOUser {
@@ -20,9 +21,11 @@ public class DTOUser {
 	}
 
 	private DTOUser() {
-		this.userName = null;
+		this.id = null;
 		this.firstName = null;
 		this.lastName = null;
+		this.userName = null;
+		this.userNumber = null;
 		this.state = null;
 	}
 
@@ -57,16 +60,16 @@ public class DTOUser {
 	public static DTOUser toDTO(User entity) {
 
 		DTOUserBuilder builder = new DTOUserBuilder();
-		builder.setFirstName(entity.getFirstName()).setLastName(entity.getLastName()).setState(entity.getState())
-				.setId(entity.getId());
+		builder.setId(entity.getId()).setFirstName(entity.getFirstName()).setLastName(entity.getLastName())
+				.setUserName(entity.getUserName()).setUserNumber(entity.getUserNumber()).setState(entity.getState());
 
-		return builder.build(entity.getUserName());
+		return builder.build(entity.toString());
 	}
 
 	public static User toEntity(DTOUser dataTransferObject) {
 
 		User user = new User(dataTransferObject.getFirstName(), dataTransferObject.getLastName(),
-				dataTransferObject.getUserName(), dataTransferObject.getUserNumber());
+				dataTransferObject.getUserName(), dataTransferObject.getUserNumber(), dataTransferObject.getState());
 
 		return user;
 	}
@@ -76,7 +79,6 @@ public class DTOUser {
 		private Long id = null;
 		private String firstName = "";
 		private String lastName = "";
-		@SuppressWarnings("unused")
 		private String userName = "";
 		private String userNumber = "";
 		private String state = "";
@@ -99,11 +101,13 @@ public class DTOUser {
 			this.lastName = lastName;
 			return this;
 		}
+
 		public DTOUserBuilder setUserName(String userName) {
 			this.userName = userName;
 			return this;
 		}
-		public DTOUserBuilder setuserNumber(String userNumber) {
+
+		public DTOUserBuilder setUserNumber(String userNumber) {
 			this.userNumber = userNumber;
 			return this;
 		}
@@ -113,7 +117,7 @@ public class DTOUser {
 			return this;
 		}
 
-		public DTOUser build(String userName) {
+		public DTOUser build(String dtoUser) {
 			return new DTOUser(id, firstName, lastName, userName, userNumber, state);
 		}
 	}
