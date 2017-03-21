@@ -6,7 +6,7 @@ import java.util.Collection;
 import se.groupfish.springcasemanagement.model.Team;
 
 public final class DTOTeam {
-
+//KESO
 	private final Long id;
 	private final String teamName;
 	private final String state;
