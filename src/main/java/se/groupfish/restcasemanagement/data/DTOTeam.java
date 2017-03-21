@@ -10,11 +10,13 @@ public final class DTOTeam {
 	private final Long id;
 	private final String teamName;
 	private final String state;
+	//private team
 
 	private DTOTeam(Long id, String teamName, String state) {
 		this.id = id;
 		this.teamName = teamName;
 		this.state = state;
+		
 	}
 
 	private DTOTeam() {
