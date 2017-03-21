@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.groupfish.springcasemanagement.model.Team;
-
+//Test Adam
 public final class DTOTeam {
-//KESO
+
 	private final Long id;
 	private final String teamName;
 	private final String state;
@@ -51,7 +51,6 @@ public final class DTOTeam {
 		Team team = new Team(dataTransferObject.getTeamName(), dataTransferObject.getState());
 		return team;
 	}
-	
 
 	public static Collection<DTOTeam> teamListToDTOTeamList(Collection<Team> list) {
 		Collection<DTOTeam> listDto = new ArrayList<>();
