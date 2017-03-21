@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.groupfish.springcasemanagement.model.Team;
-//Test Adam
+
 public final class DTOTeam {
 
 	private final Long id;
 	private final String teamName;
 	private final String state;
-	//private team
 
 	private DTOTeam(Long id, String teamName, String state) {
 		this.id = id;
 		this.teamName = teamName;
 		this.state = state;
-		
+
 	}
 
 	private DTOTeam() {
