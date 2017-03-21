@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.groupfish.restcasemanagement.data.DTOTeam;
+import se.groupfish.restcasemanagement.data.DTOUser;
 import se.groupfish.restcasemanagement.service.RestTeamService;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.Team;
@@ -67,5 +68,17 @@ public class TeamResource {
 
 		Collection<DTOTeam> getAllTeams = service.getAllDTOTeams(dtoTeams);
 		return getAllTeams == null ? Response.status(Status.NOT_FOUND).build() : Response.ok(getAllTeams).build();
+	}
+
+	@PUT
+	@Path("users/{id}")
+	public Response addUserToTeam(@PathParam("id") Long id, DTOUser dtoUser) {
+
+		try {
+			service.addUserToOneTeam(id, dtoUser.getId());
+		} catch (ServiceException e) {
+			throw new WebApplicationException(Status.BAD_REQUEST);
+		}
+		return Response.status(Status.GONE).build();
 	}
 }
