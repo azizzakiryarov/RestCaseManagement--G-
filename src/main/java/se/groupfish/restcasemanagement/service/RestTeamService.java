@@ -2,7 +2,8 @@ package se.groupfish.restcasemanagement.service;
 
 import org.springframework.stereotype.Component;
 import static se.groupfish.restcasemanagement.data.DTOTeam.toEntity;
-import static se.groupfish.restcasemanagement.data.DTOTeam.toDTO;
+import static se.groupfish.restcasemanagement.data.DTOTeam.teamListToDTOTeamList;
+import java.util.Collection;
 
 import se.groupfish.restcasemanagement.data.DTOTeam;
 import se.groupfish.springcasemanagement.exception.ServiceException;
@@ -31,10 +32,15 @@ public class RestTeamService {
 
 	}
 
-	public void disableTeam(Long id, String state) throws ServiceException {
+	public void disableTeam(Long id) throws ServiceException {
+		teamService.disableTeam(id);
+	}
 
-		Team disabledTeam = teamService.getTeamById(id);
-		teamService.updateTeamName(disabledTeam.getId(), state);
+	public Collection<DTOTeam> getAllDTOTeams(Collection<DTOTeam> dtoTeams) {
+
+		Collection<Team> list = teamService.getAllTeam();
+		Collection<DTOTeam> teams = teamListToDTOTeamList(list);
+		return teams;
 
 	}
 }

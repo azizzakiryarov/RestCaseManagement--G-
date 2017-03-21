@@ -1,5 +1,8 @@
 package se.groupfish.restcasemanagement.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import se.groupfish.springcasemanagement.model.Team;
 
 public final class DTOTeam {
@@ -44,9 +47,18 @@ public final class DTOTeam {
 	}
 
 	public static Team toEntity(DTOTeam dataTransferObject) {
-		Team team = new Team(dataTransferObject.getTeamName(), dataTransferObject.getState());
 
+		Team team = new Team(dataTransferObject.getTeamName(), dataTransferObject.getState());
 		return team;
+	}
+	
+
+	public static Collection<DTOTeam> teamListToDTOTeamList(Collection<Team> list) {
+		Collection<DTOTeam> listDto = new ArrayList<>();
+		for (Team teams : list) {
+			listDto.add(DTOTeam.toDTO(teams));
+		}
+		return listDto;
 	}
 
 	public static final class DTOTeamBuilder {
@@ -76,7 +88,5 @@ public final class DTOTeam {
 		public DTOTeam build(String dtoTeam) {
 			return new DTOTeam(id, teamName, state);
 		}
-
 	}
-
 }
