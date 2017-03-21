@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.groupfish.springcasemanagement.model.Team;
-<<<<<<< HEAD
 
-=======
-//Hej Vlad
->>>>>>> refs/remotes/origin/master
 public final class DTOTeam {
 
 	private final Long id;

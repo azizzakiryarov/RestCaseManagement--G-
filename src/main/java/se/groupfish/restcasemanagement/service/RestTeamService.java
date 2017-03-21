@@ -8,15 +8,19 @@ import java.util.Collection;
 import se.groupfish.restcasemanagement.data.DTOTeam;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.Team;
+import se.groupfish.springcasemanagement.model.User;
 import se.groupfish.springcasemanagement.service.TeamService;
+import se.groupfish.springcasemanagement.service.UserService;
 
 @Component
 public class RestTeamService {
 
 	private final TeamService teamService;
+	private final UserService userService;
 
-	public RestTeamService(TeamService teamService) {
+	public RestTeamService(TeamService teamService, UserService userService) {
 		this.teamService = teamService;
+		this.userService = userService;
 	}
 
 	public Team createTeam(DTOTeam dtoTeam) throws ServiceException {
@@ -44,9 +48,13 @@ public class RestTeamService {
 
 	}
 
-	public void addUserToOneTeam(Long teamId, Long userId) throws ServiceException {
+	public void addUserToOneTeam(long userId, DTOTeam dtoTeam) throws ServiceException {
 
-		teamService.addUserToTeam(teamId, userId);
+		User userAddToTeam = userService.getUserById(userId);
+		Team team = toEntity(dtoTeam);
+		Team teamToUser = teamService.getTeamById(team.getId());
+		userAddToTeam.setTeam(teamToUser);
+		teamService.addUserToTeam(userAddToTeam.getId(), teamToUser.getId());
 
 	}
 }
