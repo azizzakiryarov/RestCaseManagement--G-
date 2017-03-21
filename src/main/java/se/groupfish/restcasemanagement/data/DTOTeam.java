@@ -5,7 +5,12 @@ import java.util.Collection;
 
 import se.groupfish.springcasemanagement.model.Team;
 
+<<<<<<< HEAD
+=======
+//Hej Vlad
+>>>>>>> refs/remotes/origin/master
 public final class DTOTeam {
+//KESOKesoKesO
 
 	private final Long id;
 	private final String teamName;
