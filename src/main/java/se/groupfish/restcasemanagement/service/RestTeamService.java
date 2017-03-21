@@ -43,4 +43,10 @@ public class RestTeamService {
 		return teams;
 
 	}
+
+	public void addUserToOneTeam(Long teamId, Long userId) throws ServiceException {
+
+		teamService.addUserToTeam(teamId, userId);
+
+	}
 }
