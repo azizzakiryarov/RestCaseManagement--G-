@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import se.groupfish.springcasemanagement.model.Team;
-//Test Adam
+//Hej Vlad
 public final class DTOTeam {
 
 	private final Long id;
