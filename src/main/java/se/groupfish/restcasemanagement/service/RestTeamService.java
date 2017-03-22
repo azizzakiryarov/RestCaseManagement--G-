@@ -3,6 +3,7 @@ package se.groupfish.restcasemanagement.service;
 import org.springframework.stereotype.Component;
 import static se.groupfish.restcasemanagement.data.DTOTeam.toEntity;
 import static se.groupfish.restcasemanagement.data.DTOTeam.teamListToDTOTeamList;
+
 import java.util.Collection;
 
 import se.groupfish.restcasemanagement.data.DTOTeam;
@@ -48,13 +49,14 @@ public class RestTeamService {
 
 	}
 
-	public void addUserToOneTeam(long userId, DTOTeam dtoTeam) throws ServiceException {
+	public void addUserToOneTeam(Long teamId, Long userId) throws ServiceException {
 
 		User userAddToTeam = userService.getUserById(userId);
-		Team team = toEntity(dtoTeam);
-		Team teamToUser = teamService.getTeamById(team.getId());
+		Team teamToUser = teamService.getTeamById(teamId);
 		userAddToTeam.setTeam(teamToUser);
-		teamService.addUserToTeam(userAddToTeam.getId(), teamToUser.getId());
+
+		teamService.addUserToTeam(teamId, userAddToTeam.getId());
 
 	}
+
 }

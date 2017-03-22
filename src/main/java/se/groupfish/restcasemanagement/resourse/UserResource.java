@@ -1,6 +1,8 @@
 package se.groupfish.restcasemanagement.resourse;
 
 import java.net.URI;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.groupfish.restcasemanagement.data.DTOUser;
+import se.groupfish.restcasemanagement.service.RestTeamService;
 import se.groupfish.restcasemanagement.service.RestUserService;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.User;
@@ -32,8 +35,9 @@ import se.groupfish.springcasemanagement.service.WorkItemService;
 public final class UserResource {
 
 	@Autowired
-	private RestUserService service;
-
+	private RestUserService userService;
+	@Autowired
+	private RestTeamService teamService;
 	@SuppressWarnings("unused")
 	@Autowired
 	private WorkItemService workItemService;
@@ -44,21 +48,43 @@ public final class UserResource {
 	@POST
 	public Response addUser(DTOUser dtoUser) throws ServiceException {
 
-		User savedUser = service.saveUser(dtoUser);
+		User savedUser = userService.saveUser(dtoUser);
 		URI location = uriInfo.getAbsolutePathBuilder().path(savedUser.getId().toString()).build();
 		return Response.created(location).build();
 	}
 
+	// @PUT
+	// @Path("{id}")
+	// public Response updateAndInactivateUser(@PathParam("id") Long id, DTOUser
+	// dtoUser) {
+	//
+	// try {
+	// if (dtoUser != null && dtoUser.getUserName() != null) {
+	// userService.updateUser(id, dtoUser.getUserName());
+	// }
+	// if (dtoUser != null && dtoUser.getState() != null) {
+	// userService.disableUser(id, dtoUser.getState());
+	// }
+	// } catch (ServiceException e) {
+	// throw new WebApplicationException(Status.BAD_REQUEST);
+	// }
+	// return Response.status(Status.OK).build();
+	// }
+
 	@PUT
 	@Path("{id}")
-	public Response updateAndInactivateUser(@PathParam("id") Long id, DTOUser dtoUser) {
+	public Response updateAndInactivateUserAndAddUserToTeam(@PathParam("id") Long id, DTOUser dtoBody) {
 
 		try {
-			if (dtoUser != null && dtoUser.getUserName() != null) {
-				service.updateUser(id, dtoUser.getUserName());
+			if (dtoBody != null && dtoBody.getUserName() != null) {
+				userService.updateUser(id, dtoBody.getUserName());
 			}
-			if (dtoUser != null && dtoUser.getState() != null) {
-				service.disableUser(id, dtoUser.getState());
+			if (dtoBody != null && dtoBody.getState() != null) {
+				userService.disableUser(id, dtoBody.getState());
+			}
+
+			if (dtoBody != null && dtoBody.getTeamId() != null) {
+				teamService.addUserToOneTeam(dtoBody.getTeamId(), id);
 			}
 		} catch (ServiceException e) {
 			throw new WebApplicationException(Status.BAD_REQUEST);
@@ -67,16 +93,30 @@ public final class UserResource {
 	}
 
 	@GET
-	public Response getUserByNumberFirstName(@QueryParam("number") String number, @QueryParam("firstName") String firstName)
-			throws ServiceException {
+	public Response getUserByNumberFirstName(@QueryParam("number") String number,
+			@QueryParam("firstName") String firstName) throws ServiceException {
 
 		if (number != null) {
-			DTOUser toUserByNumber = service.getUserByNumber(number);
+			DTOUser toUserByNumber = userService.getUserByNumber(number);
 			return Response.ok(toUserByNumber).build();
 		}
 		if (firstName != null) {
-			DTOUser toUser = service.getUserByFirstName(firstName);
+			DTOUser toUser = userService.getUserByFirstName(firstName);
 			return Response.ok(toUser).build();
+		}
+		return Response.status(Status.OK).build();
+	}
+
+	@GET
+	@Path("{teamId}")
+	public Response getAllUsersByTeamId(@PathParam("teamId") Long teamId) {
+
+		List<DTOUser> getAllUsers;
+		try {
+			getAllUsers = userService.getAllDTOUsers(teamId);
+			return getAllUsers == null ? Response.status(Status.NOT_FOUND).build() : Response.ok(getAllUsers).build();
+		} catch (ServiceException e) {
+			new WebApplicationException(Status.BAD_REQUEST);
 		}
 		return Response.status(Status.OK).build();
 	}

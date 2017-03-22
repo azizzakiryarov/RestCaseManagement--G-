@@ -32,7 +32,7 @@ import se.groupfish.springcasemanagement.model.Team;
 public class TeamResource {
 
 	@Autowired
-	private RestTeamService service;
+	private RestTeamService teamService;
 
 	@Context
 	private UriInfo uriInfo;
@@ -40,7 +40,7 @@ public class TeamResource {
 	@POST
 	public Response addTeam(DTOTeam dtoTeam) throws ServiceException {
 
-		Team savedTeam = service.createTeam(dtoTeam);
+		Team savedTeam = teamService.createTeam(dtoTeam);
 		URI location = uriInfo.getAbsolutePathBuilder().path(savedTeam.getId().toString()).build();
 		return Response.created(location).build();
 	}
@@ -51,10 +51,10 @@ public class TeamResource {
 
 		try {
 			if (dtoTeam != null && dtoTeam.getTeamName() != null) {
-				service.updateTeam(id, dtoTeam.getTeamName());
+				teamService.updateTeam(id, dtoTeam.getTeamName());
 			}
 			if (dtoTeam != null && dtoTeam.getState() != null) {
-				service.disableTeam(id);
+				teamService.disableTeam(id);
 			}
 		} catch (ServiceException e) {
 			throw new WebApplicationException(Status.BAD_REQUEST);
@@ -65,20 +65,20 @@ public class TeamResource {
 	@GET
 	public Response getAllTeams(Collection<DTOTeam> dtoTeams) {
 
-		Collection<DTOTeam> getAllTeams = service.getAllDTOTeams(dtoTeams);
+		Collection<DTOTeam> getAllTeams = teamService.getAllDTOTeams(dtoTeams);
 		return getAllTeams == null ? Response.status(Status.NOT_FOUND).build() : Response.ok(getAllTeams).build();
 	}
-
-	@PUT
-	@Path("/users/{id}")
-	public Response addUserToTeam(@PathParam("id") long id, DTOTeam dtoTeam) {
-
-		try {
-			service.addUserToOneTeam(id, dtoTeam);
-			URI location = uriInfo.getAbsolutePathBuilder().path(dtoTeam.getId().toString()).build();
-			return Response.created(location).build();
-		} catch (ServiceException e) {
-			throw new WebApplicationException(Status.BAD_REQUEST);
-		}
-	}
+	
+//	@PUT
+//	@Path("users/{id}")
+//	public Response addUserToTeam(@PathParam("id") Long userId, DTOTeam dtoTeam) {
+//
+//		try {
+//            teamService.addUserToOneTeam(userId, dtoTeam.getId()); 
+//			URI location = uriInfo.getAbsolutePathBuilder().path(userId.toString()).build();
+//			return Response.created(location).build();
+//		} catch (ServiceException e) {
+//			throw new WebApplicationException(Status.BAD_REQUEST);
+//		}
+//	}
 }
