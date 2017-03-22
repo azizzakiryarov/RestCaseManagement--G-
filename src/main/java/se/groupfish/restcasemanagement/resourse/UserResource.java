@@ -46,30 +46,35 @@ public final class UserResource {
 	private UriInfo uriInfo;
 
 	@POST
-	public Response addUser(DTOUser dtoUser) throws ServiceException {
+	public Response addUser(DTOUser dtoUser) {
 
-		User savedUser = userService.saveUser(dtoUser);
-		URI location = uriInfo.getAbsolutePathBuilder().path(savedUser.getId().toString()).build();
-		return Response.created(location).build();
+		User savedUser;
+		try {
+			savedUser = userService.saveUser(dtoUser);
+			URI location = uriInfo.getAbsolutePathBuilder().path(savedUser.getId().toString()).build();
+			return Response.created(location).build();
+		} catch (ServiceException e) {
+			new WebApplicationException(Status.CONFLICT);
+		}
+		return Response.status(Status.OK).build();
 	}
 
-	// @PUT
-	// @Path("{id}")
-	// public Response updateAndInactivateUser(@PathParam("id") Long id, DTOUser
-	// dtoUser) {
-	//
-	// try {
-	// if (dtoUser != null && dtoUser.getUserName() != null) {
-	// userService.updateUser(id, dtoUser.getUserName());
-	// }
-	// if (dtoUser != null && dtoUser.getState() != null) {
-	// userService.disableUser(id, dtoUser.getState());
-	// }
-	// } catch (ServiceException e) {
-	// throw new WebApplicationException(Status.BAD_REQUEST);
-	// }
-	// return Response.status(Status.OK).build();
-	// }
+//	@PUT
+//	@Path("{id}")
+//	public Response updateAndInactivateUser(@PathParam("id") Long id, DTOUser dtoUser) {
+//
+//		try {
+//			if (dtoUser != null && dtoUser.getUserName() != null) {
+//				userService.updateUser(id, dtoUser.getUserName());
+//			}
+//			if (dtoUser != null && dtoUser.getState() != null) {
+//				userService.disableUser(id, dtoUser.getState());
+//			}
+//		} catch (ServiceException e) {
+//			throw new WebApplicationException(Status.BAD_REQUEST);
+//		}
+//		return Response.status(Status.OK).build();
+//	}
 
 	@PUT
 	@Path("{id}")
@@ -96,15 +101,19 @@ public final class UserResource {
 	public Response getUserByNumberFirstName(@QueryParam("number") String number,
 			@QueryParam("firstName") String firstName) throws ServiceException {
 
-		if (number != null) {
-			DTOUser toUserByNumber = userService.getUserByNumber(number);
-			return Response.ok(toUserByNumber).build();
+		try {
+			if (number != null) {
+				DTOUser toUserByNumber = userService.getUserByNumber(number);
+				return Response.ok(toUserByNumber).build();
+			}
+			if (firstName != null) {
+				DTOUser toUser = userService.getUserByFirstName(firstName);
+				return Response.ok(toUser).build();
+			}
+			return Response.status(Status.OK).build();
+		} catch (Exception e) {
+			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
-		if (firstName != null) {
-			DTOUser toUser = userService.getUserByFirstName(firstName);
-			return Response.ok(toUser).build();
-		}
-		return Response.status(Status.OK).build();
 	}
 
 	@GET
