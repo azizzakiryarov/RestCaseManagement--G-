@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import se.groupfish.restcasemanagement.resourse.TeamResource;
 import se.groupfish.restcasemanagement.resourse.UserResource;
+import se.groupfish.restcasemanagement.resourse.WorkItemResource;
 
 @Component
 public class JerseyConfig extends ResourceConfig {
@@ -12,7 +13,7 @@ public class JerseyConfig extends ResourceConfig {
 	public JerseyConfig() {
 		register(UserResource.class);
 		register(TeamResource.class);
-//		register(WorkItemResource.class);
+		register(WorkItemResource.class);
 //		register(IssueResource.class);
 //		register(ConflictExceptionMapper.class);
 //		register(NotFoundExceptionMapper.class);

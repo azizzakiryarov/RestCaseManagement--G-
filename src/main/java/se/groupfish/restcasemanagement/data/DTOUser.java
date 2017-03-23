@@ -6,7 +6,7 @@ import java.util.List;
 
 import se.groupfish.springcasemanagement.model.User;
 
-public class DTOUser {
+public final class DTOUser {
 
 	private Long id;
 	private final String firstName;

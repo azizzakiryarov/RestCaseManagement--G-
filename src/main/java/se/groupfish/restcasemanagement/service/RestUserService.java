@@ -12,19 +12,15 @@ import org.springframework.stereotype.Component;
 import se.groupfish.restcasemanagement.data.DTOUser;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.User;
-import se.groupfish.springcasemanagement.service.TeamService;
 import se.groupfish.springcasemanagement.service.UserService;
 
 @Component
 public class RestUserService {
 
 	private final UserService userService;
-	@SuppressWarnings("unused")
-	private final TeamService teamService;
 
-	public RestUserService(UserService userService, TeamService teamService) {
+	public RestUserService(UserService userService) {
 		this.userService = userService;
-		this.teamService = teamService;
 	}
 
 	public User saveUser(DTOUser dtoUser) throws ServiceException {

@@ -26,7 +26,6 @@ import se.groupfish.restcasemanagement.service.RestTeamService;
 import se.groupfish.restcasemanagement.service.RestUserService;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.User;
-import se.groupfish.springcasemanagement.service.WorkItemService;
 
 @Component
 @Path("users")
@@ -38,9 +37,6 @@ public final class UserResource {
 	private RestUserService userService;
 	@Autowired
 	private RestTeamService teamService;
-	@SuppressWarnings("unused")
-	@Autowired
-	private WorkItemService workItemService;
 
 	@Context
 	private UriInfo uriInfo;
