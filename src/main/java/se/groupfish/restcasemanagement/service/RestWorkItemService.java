@@ -67,5 +67,13 @@ public class RestWorkItemService {
 		
 		return dtoWorkItems;
 	}
+	
+	public Collection<DTOWorkItem> getAllWorkItemsByContent(String descriptionContent) throws ServiceException{
+		
+		Collection<WorkItem> workItems = workItemService.getAllWorkItemByDescriptionContent(descriptionContent);
+		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
+		
+		return dtoWorkItems;
+	}
 
 }

@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -60,9 +61,12 @@ public class WorkItemResource {
 			if (dtoWorkItem != null && dtoWorkItem.getState() != null) {
 				workItemService.updateWorkItemsState(id, dtoWorkItem.getState());
 			}
-
-			if (dtoWorkItem != null && dtoWorkItem.getUserId() != null) {
-				workItemService.addWorkItemToUser(id, dtoWorkItem.getUserId());
+			try {
+				if (dtoWorkItem != null && dtoWorkItem.getUserId() != null) {
+					workItemService.addWorkItemToUser(id, dtoWorkItem.getUserId());
+				}
+			} catch (Exception e) {
+				throw new WebApplicationException(Status.FORBIDDEN);
 			}
 		} catch (ServiceException | IOException e) {
 			throw new WebApplicationException(Status.BAD_REQUEST);
@@ -83,14 +87,32 @@ public class WorkItemResource {
 	}
 
 	@GET
-	@Path("{state}")
-	public Response getAllWorkItemsByState(@PathParam("state") String state) {
-
-		Collection<DTOWorkItem> getAllWorkItems;
+	public Response getAllWorkItemsByStateByTeamIdByUserId(@QueryParam("state") String state,
+			@QueryParam("teamId") Long teamId, @QueryParam("userId") Long userId) {
 		try {
-			getAllWorkItems = workItemService.getAllDTOWorkItemsByState(state);
-			return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
-					: Response.ok(getAllWorkItems).build();
+			if (state != null) {
+
+				Collection<DTOWorkItem> getAllWorkItems;
+				getAllWorkItems = workItemService.getAllDTOWorkItemsByState(state);
+				return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
+						: Response.ok(getAllWorkItems).build();
+			}
+
+			if (teamId != null) {
+				Collection<DTOWorkItem> getAllWorkItems;
+				getAllWorkItems = workItemService.getAllDTOWorkItemsByTeam(teamId);
+				return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
+						: Response.ok(getAllWorkItems).build();
+			}
+
+			if (userId != null) {
+
+				Collection<DTOWorkItem> getAllWorkItems;
+				getAllWorkItems = workItemService.getAllDTOWorkItemsByUser(userId);
+				return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
+						: Response.ok(getAllWorkItems).build();
+
+			}
 		} catch (ServiceException e) {
 			new WebApplicationException(Status.BAD_REQUEST);
 		}
@@ -98,35 +120,19 @@ public class WorkItemResource {
 	}
 
 	@GET
-	@Path("{teamId}")
-	public Response getAllWorkItemsByTeamId(@PathParam("teamId") Long teamId) {
+	@Path("{content}")
+	public Response getAllWorkItemByDescriptionContent(@PathParam("content") String descriptionContent) {
 
-		Collection<DTOWorkItem> getAllWorkItems;
 		try {
-			getAllWorkItems = workItemService.getAllDTOWorkItemsByTeam(teamId);
-			return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
-					: Response.ok(getAllWorkItems).build();
+			if (descriptionContent != null) {
+				Collection<DTOWorkItem> getAllWorkItemsByDescription;
+				getAllWorkItemsByDescription = workItemService.getAllWorkItemsByContent(descriptionContent);
+				return getAllWorkItemsByDescription == null ? Response.status(Status.NOT_FOUND).build()
+						: Response.ok(getAllWorkItemsByDescription).build();
+			}
 		} catch (ServiceException e) {
-			new WebApplicationException(Status.BAD_REQUEST);
+			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
 		return Response.status(Status.OK).build();
 	}
-
-	@GET
-	@Path("{userId}")
-	public Response getAllWorkItemsByUserId(@PathParam("userId") Long userId) {
-
-		Collection<DTOWorkItem> getAllWorkItems;
-		try {
-			getAllWorkItems = workItemService.getAllDTOWorkItemsByUser(userId);
-			return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
-					: Response.ok(getAllWorkItems).build();
-		} catch (ServiceException e) {
-			new WebApplicationException(Status.BAD_REQUEST);
-		}
-		return Response.status(Status.OK).build();
-	}
-	
-	
-
 }
