@@ -11,18 +11,14 @@ public class DTOWorkItem {
 	private String title;
 	private String description;
 	private String state;
+	private Long userId;
 
-	public DTOWorkItem(Long id, String title, String description, String state) {
+	public DTOWorkItem(Long id, String title, String description, String state, Long userId) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.state = state;
-	}
-
-	public DTOWorkItem(String title, String description, String state) {
-		this.title = title;
-		this.description = description;
-		this.state = state;
+		this.userId = userId;
 	}
 
 	public DTOWorkItem() {
@@ -48,11 +44,15 @@ public class DTOWorkItem {
 		return state;
 	}
 
+	public Long getUserId() {
+		return userId;
+	}
+
 	public static DTOWorkItem toDTO(WorkItem entity) {
 
 		DTOWorkItemBuilder builder = new DTOWorkItemBuilder();
 		builder.setId(entity.getId()).setTitle(entity.getTitle()).setDescription(entity.getDescription())
-				.setState(entity.getState());
+				.setState(entity.getState()).setUserId(entity.getUser().getId());
 
 		return builder.build(entity.toString());
 	}
@@ -83,6 +83,7 @@ public class DTOWorkItem {
 		private String title = "";
 		private String description = "";
 		private String state = "";
+		private Long userId = null;
 
 		public DTOWorkItemBuilder() {
 			;
@@ -108,8 +109,13 @@ public class DTOWorkItem {
 			return this;
 		}
 
+		public DTOWorkItemBuilder setUserId(Long userId) {
+			this.userId = userId;
+			return this;
+		}
+
 		public DTOWorkItem build(String dtoWorkItem) {
-			return new DTOWorkItem(id, title, description, state);
+			return new DTOWorkItem(id, title, description, state, userId);
 		}
 	}
 }
