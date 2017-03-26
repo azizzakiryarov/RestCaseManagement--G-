@@ -5,20 +5,22 @@ import java.util.Collection;
 import java.util.List;
 import se.groupfish.springcasemanagement.model.WorkItem;
 
-public class DTOWorkItem {
+public final class DTOWorkItem {
 
-	private Long id;
-	private String title;
-	private String description;
-	private String state;
-	private Long userId;
+	private final Long id;
+	private final String title;
+	private final String description;
+	private final String state;
+	private final Long userId;
+	private final Long issueId;
 
-	public DTOWorkItem(Long id, String title, String description, String state, Long userId) {
+	public DTOWorkItem(Long id, String title, String description, String state, Long userId, Long issueId) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.state = state;
 		this.userId = userId;
+		this.issueId = issueId;
 	}
 
 	public DTOWorkItem() {
@@ -26,6 +28,8 @@ public class DTOWorkItem {
 		this.title = null;
 		this.description = null;
 		this.state = null;
+		this.userId = null;
+		this.issueId = null;
 	}
 
 	public Long getId() {
@@ -48,11 +52,15 @@ public class DTOWorkItem {
 		return userId;
 	}
 
+	public Long getIssueId() {
+		return issueId;
+	}
+
 	public static DTOWorkItem toDTO(WorkItem entity) {
 
 		DTOWorkItemBuilder builder = new DTOWorkItemBuilder();
 		builder.setId(entity.getId()).setTitle(entity.getTitle()).setDescription(entity.getDescription())
-				.setState(entity.getState()).setUserId(entity.getUser().getId());
+				.setState(entity.getState()).setUserId(entity.getUser().getId()).setIssueId(entity.getIssue().getId());
 
 		return builder.build(entity.toString());
 	}
@@ -84,6 +92,7 @@ public class DTOWorkItem {
 		private String description = "";
 		private String state = "";
 		private Long userId = null;
+		private Long issueId = null;
 
 		public DTOWorkItemBuilder() {
 			;
@@ -114,8 +123,13 @@ public class DTOWorkItem {
 			return this;
 		}
 
+		public DTOWorkItemBuilder setIssueId(Long issueId) {
+			this.issueId = issueId;
+			return this;
+		}
+
 		public DTOWorkItem build(String dtoWorkItem) {
-			return new DTOWorkItem(id, title, description, state, userId);
+			return new DTOWorkItem(id, title, description, state, userId, issueId);
 		}
 	}
 }

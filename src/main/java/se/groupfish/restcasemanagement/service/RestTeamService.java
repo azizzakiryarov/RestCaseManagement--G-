@@ -14,7 +14,7 @@ import se.groupfish.springcasemanagement.service.TeamService;
 import se.groupfish.springcasemanagement.service.UserService;
 
 @Component
-public class RestTeamService {
+public final class RestTeamService {
 
 	private final TeamService teamService;
 	private final UserService userService;

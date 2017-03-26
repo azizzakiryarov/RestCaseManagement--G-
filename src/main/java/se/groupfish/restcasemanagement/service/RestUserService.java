@@ -15,7 +15,7 @@ import se.groupfish.springcasemanagement.model.User;
 import se.groupfish.springcasemanagement.service.UserService;
 
 @Component
-public class RestUserService {
+public final class RestUserService {
 
 	private final UserService userService;
 

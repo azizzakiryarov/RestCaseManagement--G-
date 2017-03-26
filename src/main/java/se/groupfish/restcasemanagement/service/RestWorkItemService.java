@@ -3,6 +3,7 @@ package se.groupfish.restcasemanagement.service;
 import se.groupfish.restcasemanagement.data.DTOWorkItem;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.WorkItem;
+import se.groupfish.springcasemanagement.service.IssueService;
 import se.groupfish.springcasemanagement.service.WorkItemService;
 import static se.groupfish.restcasemanagement.data.DTOWorkItem.toEntity;
 import static se.groupfish.restcasemanagement.data.DTOWorkItem.workItemsListToDTOWorkItemList;
@@ -13,12 +14,14 @@ import java.util.Collection;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RestWorkItemService {
+public final class RestWorkItemService {
 
-	private WorkItemService workItemService;
+	private final WorkItemService workItemService;
+	private final IssueService issueService;
 
-	public RestWorkItemService(WorkItemService workItemService) {
+	public RestWorkItemService(WorkItemService workItemService, IssueService issueService) {
 		this.workItemService = workItemService;
+		this.issueService = issueService;
 	}
 
 	public WorkItem saveWorkItem(DTOWorkItem dtoWorkItem) throws ServiceException {
@@ -71,6 +74,14 @@ public class RestWorkItemService {
 	public Collection<DTOWorkItem> getAllWorkItemsByContent(String descriptionContent) throws ServiceException{
 		
 		Collection<WorkItem> workItems = workItemService.getAllWorkItemByDescriptionContent(descriptionContent);
+		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
+		
+		return dtoWorkItems;
+	}
+
+	public Collection<DTOWorkItem> getAllDTOWorkItemsByIssue(Long issueId) throws ServiceException {
+		
+		Collection<WorkItem> workItems = issueService.getAllWorkItemsWithIssue(issueId);
 		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
 		
 		return dtoWorkItems;

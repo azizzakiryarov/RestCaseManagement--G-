@@ -29,7 +29,7 @@ import se.groupfish.springcasemanagement.model.Team;
 @Path("teams")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TeamResource {
+public final class TeamResource {
 
 	@Autowired
 	private RestTeamService teamService;

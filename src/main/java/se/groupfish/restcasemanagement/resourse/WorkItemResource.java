@@ -23,7 +23,9 @@ import javax.ws.rs.core.Response.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import se.groupfish.restcasemanagement.data.DTOIssue;
 import se.groupfish.restcasemanagement.data.DTOWorkItem;
+import se.groupfish.restcasemanagement.service.RestIssueService;
 import se.groupfish.restcasemanagement.service.RestWorkItemService;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.WorkItem;
@@ -32,10 +34,13 @@ import se.groupfish.springcasemanagement.model.WorkItem;
 @Path("workitems")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class WorkItemResource {
+public final class WorkItemResource {
 
 	@Autowired
 	private RestWorkItemService workItemService;
+
+	@Autowired
+	private RestIssueService issueService;
 
 	@Context
 	private UriInfo uriInfo;
@@ -53,6 +58,18 @@ public class WorkItemResource {
 		return Response.status(Status.OK).build();
 	}
 
+	@POST
+	@Path("{workitemId}")
+	public Response createIssueAndAddToWorkItem(DTOIssue dtoIssue, @PathParam("workitemId") Long workItemId) {
+
+		try {
+			issueService.saveIssue(dtoIssue, workItemId);
+		} catch (ServiceException e) {
+			new WebApplicationException(Status.CONFLICT);
+		}
+		return Response.status(Status.OK).build();
+	}
+
 	@PUT
 	@Path("{id}")
 	public Response updateWorkItemsStateAndAddWorkItemToUser(@PathParam("id") Long id, DTOWorkItem dtoWorkItem) {
@@ -61,12 +78,8 @@ public class WorkItemResource {
 			if (dtoWorkItem != null && dtoWorkItem.getState() != null) {
 				workItemService.updateWorkItemsState(id, dtoWorkItem.getState());
 			}
-			try {
-				if (dtoWorkItem != null && dtoWorkItem.getUserId() != null) {
-					workItemService.addWorkItemToUser(id, dtoWorkItem.getUserId());
-				}
-			} catch (Exception e) {
-				throw new WebApplicationException(Status.FORBIDDEN);
+			if (dtoWorkItem != null && dtoWorkItem.getUserId() != null) {
+				workItemService.addWorkItemToUser(id, dtoWorkItem.getUserId());
 			}
 		} catch (ServiceException | IOException e) {
 			throw new WebApplicationException(Status.BAD_REQUEST);
@@ -87,8 +100,8 @@ public class WorkItemResource {
 	}
 
 	@GET
-	public Response getAllWorkItemsByStateByTeamIdByUserId(@QueryParam("state") String state,
-			@QueryParam("teamId") Long teamId, @QueryParam("userId") Long userId) {
+	public Response getAllWorkItemsByStateByTeamIdByUserIdIssueId(@QueryParam("state") String state,
+			@QueryParam("teamId") Long teamId, @QueryParam("userId") Long userId, @QueryParam("issueId") Long issueId) {
 		try {
 			if (state != null) {
 
@@ -112,6 +125,14 @@ public class WorkItemResource {
 				return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
 						: Response.ok(getAllWorkItems).build();
 
+			}
+
+			if (issueId != null) {
+
+				Collection<DTOWorkItem> getAllWorkItems;
+				getAllWorkItems = workItemService.getAllDTOWorkItemsByIssue(issueId);
+				return getAllWorkItems == null ? Response.status(Status.NOT_FOUND).build()
+						: Response.ok(getAllWorkItems).build();
 			}
 		} catch (ServiceException e) {
 			new WebApplicationException(Status.BAD_REQUEST);

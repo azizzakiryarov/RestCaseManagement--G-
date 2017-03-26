@@ -8,11 +8,11 @@ import se.groupfish.springcasemanagement.model.User;
 
 public final class DTOUser {
 
-	private Long id;
+	private final Long id;
 	private final String firstName;
 	private final String lastName;
 	private final String userName;
-	private String userNumber;
+	private final String userNumber;
 	private final String state;
 	private Long teamId;
 
@@ -94,7 +94,7 @@ public final class DTOUser {
 
 		return user;
 	}
-	
+
 	public static List<DTOUser> usersListToDTOUserList(Collection<User> list) {
 		List<DTOUser> listDto = new ArrayList<>();
 		for (User users : list) {
