@@ -5,6 +5,9 @@ import static se.groupfish.restcasemanagement.data.DTOUser.usersListToDTOUserLis
 
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
 import static se.groupfish.restcasemanagement.data.DTOUser.toDTO;
 
 import org.springframework.stereotype.Component;
@@ -25,20 +28,32 @@ public final class RestUserService {
 
 	public User saveUser(DTOUser dtoUser) throws ServiceException {
 
-		User savedUser = toEntity(dtoUser);
-		return userService.createUser(savedUser);
+		try {
+			User savedUser = toEntity(dtoUser);
+			return userService.createUser(savedUser);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 	}
 
 	public void updateUser(Long userId, String userName) throws ServiceException {
 
-		User userForUpdate = userService.getUserById(userId);
-		userService.updateUserUsername(userForUpdate.getId(), userName);
+		try {
+			User userForUpdate = userService.getUserById(userId);
+			userService.updateUserUsername(userForUpdate.getId(), userName);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 	}
 
 	public void disableUser(Long id, String state) throws ServiceException {
 
-		User userForDisactivate = userService.getUserById(id);
-		userService.updateUserState(userForDisactivate.getId(), state);
+		try {
+			User userForDisactivate = userService.getUserById(id);
+			userService.updateUserState(userForDisactivate.getId(), state);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 	}
 
 	public DTOUser getUserByNumber(String number) throws ServiceException {

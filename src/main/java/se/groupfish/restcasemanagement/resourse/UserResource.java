@@ -11,7 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,87 +41,57 @@ public final class UserResource {
 	private UriInfo uriInfo;
 
 	@POST
-	public Response addUser(DTOUser dtoUser) {
+	public Response addUser(DTOUser dtoUser) throws ServiceException {
 
-		User savedUser;
-		try {
-			savedUser = userService.saveUser(dtoUser);
-			URI location = uriInfo.getAbsolutePathBuilder().path(savedUser.getId().toString()).build();
-			return Response.created(location).build();
-		} catch (ServiceException e) {
-			new WebApplicationException(Status.CONFLICT);
-		}
-		return Response.status(Status.OK).build();
+		User savedUser = userService.saveUser(dtoUser);
+		URI location = uriInfo.getAbsolutePathBuilder().path(savedUser.getId().toString()).build();
+		return Response.created(location).build();
 	}
-
-//	@PUT
-//	@Path("{id}")
-//	public Response updateAndInactivateUser(@PathParam("id") Long id, DTOUser dtoUser) {
-//
-//		try {
-//			if (dtoUser != null && dtoUser.getUserName() != null) {
-//				userService.updateUser(id, dtoUser.getUserName());
-//			}
-//			if (dtoUser != null && dtoUser.getState() != null) {
-//				userService.disableUser(id, dtoUser.getState());
-//			}
-//		} catch (ServiceException e) {
-//			throw new WebApplicationException(Status.BAD_REQUEST);
-//		}
-//		return Response.status(Status.OK).build();
-//	}
 
 	@PUT
 	@Path("{id}")
-	public Response updateAndInactivateUserAndAddUserToTeam(@PathParam("id") Long id, DTOUser dtoBody) {
+	public Response updateAndInactivateUserAndAddUserToTeam(@PathParam("id") Long id, DTOUser dtoBody)
+			throws ServiceException {
 
-		try {
-			if (dtoBody != null && dtoBody.getUserName() != null) {
-				userService.updateUser(id, dtoBody.getUserName());
-			}
-			if (dtoBody != null && dtoBody.getState() != null) {
-				userService.disableUser(id, dtoBody.getState());
-			}
-
-			if (dtoBody != null && dtoBody.getTeamId() != null) {
-				teamService.addUserToOneTeam(dtoBody.getTeamId(), id);
-			}
-		} catch (ServiceException e) {
-			throw new WebApplicationException(Status.BAD_REQUEST);
+		if (dtoBody != null && dtoBody.getUserName() != null) {
+			userService.updateUser(id, dtoBody.getUserName());
+			return Response.status(Status.OK).build();
 		}
-		return Response.status(Status.OK).build();
+		if (dtoBody != null && dtoBody.getState() != null) {
+			userService.disableUser(id, dtoBody.getState());
+			return Response.status(Status.OK).build();
+		}
+
+		if (dtoBody != null && dtoBody.getTeamId() != null) {
+			teamService.addUserToOneTeam(dtoBody.getTeamId(), id);
+			return Response.status(Status.OK).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
 	public Response getUserByNumberFirstName(@QueryParam("number") String number,
 			@QueryParam("firstName") String firstName) throws ServiceException {
 
-		try {
-			if (number != null) {
-				DTOUser toUserByNumber = userService.getUserByNumber(number);
-				return Response.ok(toUserByNumber).build();
-			}
-			if (firstName != null) {
-				DTOUser toUser = userService.getUserByFirstName(firstName);
-				return Response.ok(toUser).build();
-			}
-			return Response.status(Status.OK).build();
-		} catch (Exception e) {
-			throw new WebApplicationException(Status.BAD_REQUEST);
+		if (number != null) {
+			DTOUser toUserByNumber = userService.getUserByNumber(number);
+			return Response.ok(toUserByNumber).build();
 		}
+		if (firstName != null) {
+			DTOUser toUser = userService.getUserByFirstName(firstName);
+			return Response.ok(toUser).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
 	@Path("{teamId}")
-	public Response getAllUsersByTeamId(@PathParam("teamId") Long teamId) {
+	public Response getAllUsersByTeamId(@PathParam("teamId") Long teamId) throws ServiceException {
 
-		List<DTOUser> getAllUsers;
-		try {
-			getAllUsers = userService.getAllDTOUsers(teamId);
+		if (teamId != null) {
+			List<DTOUser> getAllUsers = userService.getAllDTOUsers(teamId);
 			return getAllUsers == null ? Response.status(Status.NOT_FOUND).build() : Response.ok(getAllUsers).build();
-		} catch (ServiceException e) {
-			new WebApplicationException(Status.BAD_REQUEST);
 		}
-		return Response.status(Status.OK).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 }

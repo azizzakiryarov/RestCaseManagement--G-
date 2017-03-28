@@ -6,6 +6,9 @@ import static se.groupfish.restcasemanagement.data.DTOTeam.teamListToDTOTeamList
 
 import java.util.Collection;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
 import se.groupfish.restcasemanagement.data.DTOTeam;
 import se.groupfish.springcasemanagement.exception.ServiceException;
 import se.groupfish.springcasemanagement.model.Team;
@@ -26,22 +29,42 @@ public final class RestTeamService {
 
 	public Team createTeam(DTOTeam dtoTeam) throws ServiceException {
 
-		Team createdTeam = toEntity(dtoTeam);
-		return teamService.createTeam(createdTeam);
+		try {
+			Team createdTeam = toEntity(dtoTeam);
+			return teamService.createTeam(createdTeam);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 	}
 
 	public void updateTeam(Long id, String teamName) throws ServiceException {
 
-		Team updatedTeam = teamService.getTeamById(id);
-		teamService.updateTeamName(updatedTeam.getId(), teamName);
+		try {
+			Team updatedTeam = teamService.getTeamById(id);
+			teamService.updateTeamName(updatedTeam.getId(), teamName);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 
 	}
 
 	public void disableTeam(Long id) throws ServiceException {
-		teamService.disableTeam(id);
+		try {
+			teamService.disableTeam(id);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 	}
 
-	public Collection<DTOTeam> getAllDTOTeams(Collection<DTOTeam> dtoTeams) {
+	public void activateTeam(Long id) throws ServiceException {
+		try {
+			teamService.activateTeam(id);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
+	}
+
+	public Collection<DTOTeam> getAllDTOTeams(Collection<DTOTeam> dtoTeams) throws ServiceException {
 
 		Collection<Team> list = teamService.getAllTeam();
 		Collection<DTOTeam> teams = teamListToDTOTeamList(list);
@@ -58,5 +81,6 @@ public final class RestTeamService {
 		teamService.addUserToTeam(teamId, userAddToTeam.getId());
 
 	}
+
 
 }

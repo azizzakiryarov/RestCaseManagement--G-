@@ -72,19 +72,17 @@ public final class WorkItemResource {
 
 	@PUT
 	@Path("{id}")
-	public Response updateWorkItemsStateAndAddWorkItemToUser(@PathParam("id") Long id, DTOWorkItem dtoWorkItem) {
+	public Response updateWorkItemsStateAndAddWorkItemToUser(@PathParam("id") Long id, DTOWorkItem dtoWorkItem) throws ServiceException, IOException {
 
-		try {
-			if (dtoWorkItem != null && dtoWorkItem.getState() != null) {
+			if (id != null && dtoWorkItem != null && dtoWorkItem.getState() != null) {
 				workItemService.updateWorkItemsState(id, dtoWorkItem.getState());
+				return Response.status(Status.OK).build();
 			}
-			if (dtoWorkItem != null && dtoWorkItem.getUserId() != null) {
+			if (id != null && dtoWorkItem != null && dtoWorkItem.getUserId() != null) {
 				workItemService.addWorkItemToUser(id, dtoWorkItem.getUserId());
+			return Response.status(Status.OK).build();
 			}
-		} catch (ServiceException | IOException e) {
-			throw new WebApplicationException(Status.BAD_REQUEST);
-		}
-		return Response.status(Status.OK).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@DELETE
@@ -141,19 +139,20 @@ public final class WorkItemResource {
 	}
 
 	@GET
-	@Path("{content}")
-	public Response getAllWorkItemByDescriptionContent(@PathParam("content") String descriptionContent) {
+	@Path("{descriptionContent}")
+	public Response getAllWorkItemByDescriptionContent(@PathParam("descriptionContent") String descriptionContent) {
 
+		if (descriptionContent != null) {
 		try {
-			if (descriptionContent != null) {
 				Collection<DTOWorkItem> getAllWorkItemsByDescription;
 				getAllWorkItemsByDescription = workItemService.getAllWorkItemsByContent(descriptionContent);
 				return getAllWorkItemsByDescription == null ? Response.status(Status.NOT_FOUND).build()
 						: Response.ok(getAllWorkItemsByDescription).build();
-			}
 		} catch (ServiceException e) {
 			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
-		return Response.status(Status.OK).build();
+		
+		}
+		return Response.status(Status.NOT_FOUND).build();
 	}
 }

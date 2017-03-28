@@ -11,6 +11,9 @@ import static se.groupfish.restcasemanagement.data.DTOWorkItem.workItemsListToDT
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,8 +35,12 @@ public final class RestWorkItemService {
 
 	public void updateWorkItemsState(Long id, String state) throws ServiceException, IOException {
 
-		WorkItem updatedWorkItem = workItemService.getWorkItemById(id);
-		workItemService.updateWorkItemState(updatedWorkItem.getId(), state);
+		try {
+			WorkItem updatedWorkItem = workItemService.getWorkItemById(id);
+			workItemService.updateWorkItemState(updatedWorkItem.getId(), state);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NO_CONTENT);
+		}
 	}
 
 	public void removeWorkItem(Long id) throws ServiceException {
@@ -64,26 +71,26 @@ public final class RestWorkItemService {
 	}
 
 	public Collection<DTOWorkItem> getAllDTOWorkItemsByState(String state) throws ServiceException {
-		
+
 		Collection<WorkItem> workItems = workItemService.getWorkItemByState(state);
 		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
-		
+
 		return dtoWorkItems;
 	}
-	
-	public Collection<DTOWorkItem> getAllWorkItemsByContent(String descriptionContent) throws ServiceException{
-		
+
+	public Collection<DTOWorkItem> getAllWorkItemsByContent(String descriptionContent) throws ServiceException {
+
 		Collection<WorkItem> workItems = workItemService.getAllWorkItemByDescriptionContent(descriptionContent);
 		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
-		
+
 		return dtoWorkItems;
 	}
 
 	public Collection<DTOWorkItem> getAllDTOWorkItemsByIssue(Long issueId) throws ServiceException {
-		
+
 		Collection<WorkItem> workItems = issueService.getAllWorkItemsWithIssue(issueId);
 		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
-		
+
 		return dtoWorkItems;
 	}
 

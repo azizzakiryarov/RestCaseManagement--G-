@@ -10,7 +10,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,53 +39,33 @@ public final class TeamResource {
 	@POST
 	public Response addTeam(DTOTeam dtoTeam) throws ServiceException {
 
-		try {
-			Team savedTeam = teamService.createTeam(dtoTeam);
-			URI location = uriInfo.getAbsolutePathBuilder().path(savedTeam.getId().toString()).build();
-			return Response.created(location).build();
-		} catch (Exception e) {
-			throw new WebApplicationException(Status.CONFLICT);
-		}
+		Team savedTeam = teamService.createTeam(dtoTeam);
+		URI location = uriInfo.getAbsolutePathBuilder().path(savedTeam.getId().toString()).build();
+		return Response.created(location).build();
 	}
 
 	@PUT
 	@Path("{id}")
-	public Response updateAndInactivateTeam(@PathParam("id") Long id, DTOTeam dtoTeam) {
+	public Response updateAndInactivateTeam(@PathParam("id") Long id, DTOTeam dtoTeam) throws ServiceException {
 
-		try {
-			if (dtoTeam != null && dtoTeam.getTeamName() != null) {
-				teamService.updateTeam(id, dtoTeam.getTeamName());
-			}
-			if (dtoTeam != null && dtoTeam.getState() != null) {
-				teamService.disableTeam(id);
-			}
-		} catch (ServiceException e) {
-			throw new WebApplicationException(Status.BAD_REQUEST);
+		if (dtoTeam != null && dtoTeam.getTeamName() != null) {
+			teamService.updateTeam(id, dtoTeam.getTeamName());
+			return Response.status(Status.OK).build();
 		}
-		return Response.status(Status.OK).build();
+		if (id != null && dtoTeam.getState().equals("Inactive")) {
+			teamService.disableTeam(id);
+			return Response.status(Status.OK).build();
+		} else if (id != null && dtoTeam.getState().equals("Active")){
+			teamService.activateTeam(id);
+			return Response.status(Status.OK).build();
+		}
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 
 	@GET
-	public Response getAllTeams(Collection<DTOTeam> dtoTeams) {
+	public Response getAllTeams(Collection<DTOTeam> dtoTeams) throws ServiceException {
 
-		try {
 			Collection<DTOTeam> getAllTeams = teamService.getAllDTOTeams(dtoTeams);
 			return getAllTeams == null ? Response.status(Status.NOT_FOUND).build() : Response.ok(getAllTeams).build();
-		} catch (Exception e) {
-			throw new WebApplicationException(Status.CONFLICT);
-		}
 	}
-
-//	@PUT
-//	@Path("users/{id}")
-//	public Response addUserToTeam(@PathParam("id") Long userId, DTOTeam dtoTeam) {
-//
-//		try {
-//			teamService.addUserToOneTeam(userId, dtoTeam.getId());
-//			URI location = uriInfo.getAbsolutePathBuilder().path(userId.toString()).build();
-//			return Response.created(location).build();
-//		} catch (ServiceException e) {
-//			throw new WebApplicationException(Status.BAD_REQUEST);
-//		}
-//	}
 }

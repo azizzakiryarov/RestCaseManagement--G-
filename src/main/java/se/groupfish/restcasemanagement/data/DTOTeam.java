@@ -49,8 +49,12 @@ public final class DTOTeam {
 
 	public static Team toEntity(DTOTeam dataTransferObject) {
 
-		Team team = new Team(dataTransferObject.getTeamName(), dataTransferObject.getState());
-		return team;
+		if (dataTransferObject.equals(null)) {
+			throw new NullPointerException("DataTransferObject is null");
+		} else {
+			Team team = new Team(dataTransferObject.getTeamName(), dataTransferObject.getState());
+			return team;
+		}
 	}
 
 	public static Collection<DTOTeam> teamListToDTOTeamList(Collection<Team> list) {
