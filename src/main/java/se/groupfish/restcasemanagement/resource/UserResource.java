@@ -1,4 +1,4 @@
-package se.groupfish.restcasemanagement.resourse;
+package se.groupfish.restcasemanagement.resource;
 
 import java.net.URI;
 import java.util.List;

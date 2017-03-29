@@ -29,8 +29,8 @@ public final class RestWorkItemService {
 
 	public WorkItem saveWorkItem(DTOWorkItem dtoWorkItem) throws ServiceException {
 
-		WorkItem savedWorkItem = toEntity(dtoWorkItem);
-		return workItemService.createWorkItem(savedWorkItem);
+			WorkItem savedWorkItem = toEntity(dtoWorkItem);
+			return workItemService.createWorkItem(savedWorkItem);
 	}
 
 	public void updateWorkItemsState(Long id, String state) throws ServiceException, IOException {
@@ -86,9 +86,9 @@ public final class RestWorkItemService {
 		return dtoWorkItems;
 	}
 
-	public Collection<DTOWorkItem> getAllDTOWorkItemsByIssue(Long issueId) throws ServiceException {
+	public Collection<DTOWorkItem> getAllDTOWorkItemsByIssue() throws ServiceException {
 
-		Collection<WorkItem> workItems = issueService.getAllWorkItemsWithIssue(issueId);
+		Collection<WorkItem> workItems = issueService.getAllWorkItemsWithIssue();
 		Collection<DTOWorkItem> dtoWorkItems = workItemsListToDTOWorkItemList(workItems);
 
 		return dtoWorkItems;

@@ -37,14 +37,12 @@ public final class DTOIssue {
 
 		DTOIssueBuilder builder = new DTOIssueBuilder();
 		builder.setId(entity.getId()).setComment(entity.getComment());
-
 		return builder.build(entity.toString());
 	}
 
 	public static Issue toEntity(DTOIssue dataTransferObject) {
 
 		Issue issue = new Issue(dataTransferObject.getComment());
-
 		return issue;
 	}
 

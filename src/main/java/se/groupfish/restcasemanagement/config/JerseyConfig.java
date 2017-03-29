@@ -3,10 +3,10 @@ package se.groupfish.restcasemanagement.config;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
-import se.groupfish.restcasemanagement.resourse.IssueResourse;
-import se.groupfish.restcasemanagement.resourse.TeamResource;
-import se.groupfish.restcasemanagement.resourse.UserResource;
-import se.groupfish.restcasemanagement.resourse.WorkItemResource;
+import se.groupfish.restcasemanagement.resource.IssueResource;
+import se.groupfish.restcasemanagement.resource.TeamResource;
+import se.groupfish.restcasemanagement.resource.UserResource;
+import se.groupfish.restcasemanagement.resource.WorkItemResource;
 
 @Component
 public class JerseyConfig extends ResourceConfig {
@@ -15,7 +15,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(UserResource.class);
 		register(TeamResource.class);
 		register(WorkItemResource.class);
-		register(IssueResourse.class);
+		register(IssueResource.class);
 	}
 
 }

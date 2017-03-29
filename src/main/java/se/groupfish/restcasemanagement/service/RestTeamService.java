@@ -77,7 +77,6 @@ public final class RestTeamService {
 		User userAddToTeam = userService.getUserById(userId);
 		Team teamToUser = teamService.getTeamById(teamId);
 		userAddToTeam.setTeam(teamToUser);
-
 		teamService.addUserToTeam(teamId, userAddToTeam.getId());
 
 	}
